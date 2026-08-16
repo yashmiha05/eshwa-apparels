@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Eshwa Apparels</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .admin-wrap { max-width: 900px; margin: 0 auto; padding: 30px 24px 80px; }
+  .admin-card { background: var(--white); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow); margin-bottom: 24px; }
+  .admin-card h3 { font-size: 16px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+  .admin-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .admin-group { margin-bottom: 14px; }
+  .admin-group label { display: block; font-size: 12px; color: var(--brown-dark); margin-bottom: 6px; font-weight: 600; }
+  .admin-group input, .admin-group select, .admin-group textarea {
+    width: 100%; padding: 11px 12px; border: 1.5px solid var(--tan-light);
+    border-radius: var(--radius); font-size: 14px; font-family: inherit; background: var(--cream);
+  }
+  .admin-hint { font-size: 12px; color: var(--brown); margin-top: 4px; }
+  .colour-row-input { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+  .colour-row-input input[type="text"] { flex: 1; }
+  .colour-row-input input[type="color"] { width: 44px; height: 40px; padding: 2px; border: 1.5px solid var(--tan-light); border-radius: var(--radius); }
+  .small-x { background: var(--brown); color: white; width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; }
+  .thumb-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+  .thumb-row .thumb { width: 70px; height: 88px; border-radius: var(--radius); overflow: hidden; position: relative; }
+  .thumb-row .thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .thumb-row .thumb button { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.6); color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; }
+  .product-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--tan-light); }
+  .product-row img { width: 50px; height: 62px; object-fit: cover; border-radius: var(--radius); }
+  .product-row .pname { font-weight: 600; flex: 1; }
+  .product-row .pprice { color: var(--brown); font-size: 13px; width: 80px; }
+  .status-msg { padding: 12px 16px; border-radius: var(--radius); font-size: 13px; margin-bottom: 16px; display: none; }
+  .status-msg.show { display: block; }
+  .status-msg.ok { background: #e5efe0; color: var(--success); }
+  .status-msg.err { background: #f5e0e0; color: #8b2020; }
+  .status-msg.loading { background: var(--tan-light); color: var(--brown-dark); }
+  .lock-screen { max-width: 440px; margin: 80px auto; text-align: center; }
+  .size-checks { display: flex; gap: 12px; flex-wrap: wrap; }
+  .size-checks label { display: flex; align-items: center; gap: 6px; font-size: 13px; background: var(--cream); border: 1.5px solid var(--tan-light); border-radius: var(--radius); padding: 8px 12px; }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="admin-wrap">
+
+  <div id="lock-screen" class="lock-screen">
+    <h2 style="margin-bottom:10px;">Admin Login</h2>
+    <p style="color:var(--brown);font-size:13px;margin-bottom:20px;">
+      Paste your GitHub Personal Access Token to unlock product management.
+      This stays only in your browser — it's never sent anywhere except directly to GitHub.
+    </p>
+    <div class="admin-card" style="text-align:left;">
+      <div class="admin-group">
+        <label>GitHub Username</label>
+        <input type="text" id="gh-owner" placeholder="e.g. yashmiha05">
+      </div>
+      <div class="admin-group">
+        <label>Repository Name</label>
+        <input type="text" id="gh-repo" placeholder="e.g. eshwa-apparels">
+      </div>
+      <div class="admin-group">
+        <label>Personal Access Token</label>
+        <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx">
+        <p class="admin-hint">Don't have one? See the "How to get a token" guide below.</p>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="unlockAdmin()">Unlock</button>
+    </div>
+
+    <div class="admin-card" style="text-align:left;">
+      <h3>How to get a token (one-time, 2 minutes)</h3>
+      <p style="font-size:13px;color:#5a4a3a;margin-bottom:10px;">1. Go to <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--brown);text-decoration:underline;">github.com/settings/tokens/new</a></p>
+      <p style="font-size:13px;color:#5a4a3a;margin-bottom:10px;">2. Note: "Eshwa Admin" &nbsp;•&nbsp; Expiration: 90 days (or No expiration)</p>
+      <p style="font-size:13px;color:#5a4a3a;margin-bottom:10px;">3. Under "Select scopes", tick the box next to <strong>repo</strong></p>
+      <p style="font-size:13px;color:#5a4a3a;margin-bottom:10px;">4. Scroll down, click <strong>Generate token</strong></p>
+      <p style="font-size:13px;color:#5a4a3a;">5. Copy the token (starts with ghp_) and paste it above. GitHub only shows it once — if you lose it, just generate a new one.</p>
+    </div>
+  </div>
+
+  <div id="admin-main" style="display:none;">
+    <div class="section-heading" style="margin-top:10px;">
+      <h2>MANAGE PRODUCTS</h2>
+      <p>Add, edit, or remove products — changes go live in about a minute</p>
+    </div>
+
+    <div id="status-msg" class="status-msg"></div>
+
+    <div class="admin-card">
+      <h3 id="form-heading">Add New Product</h3>
+      <input type="hidden" id="edit-id">
+      <div class="admin-row">
+        <div class="admin-group">
+          <label>Product Name</label>
+          <input type="text" id="f-name" placeholder="e.g. Eshwa Red Silk Kurti">
+        </div>
+        <div class="admin-group">
+          <label>Price (₹)</label>
+          <input type="number" id="f-price" placeholder="e.g. 1499">
+        </div>
+      </div>
+      <div class="admin-row">
+        <div class="admin-group">
+          <label>Category</label>
+          <select id="f-category">
+            <option value="kurties">Kurties</option>
+            <option value="2-piece">2 Piece Set</option>
+            <option value="3-piece">3 Piece Set</option>
+          </select>
+        </div>
+        <div class="admin-group">
+          <label>Stock Left</label>
+          <input type="number" id="f-stock" placeholder="e.g. 5">
+        </div>
+      </div>
+
+      <div class="admin-group">
+        <label>Sizes Available</label>
+        <div class="size-checks">
+          <label><input type="checkbox" value="S" class="size-check"> S</label>
+          <label><input type="checkbox" value="M" class="size-check"> M</label>
+          <label><input type="checkbox" value="L" class="size-check"> L</label>
+          <label><input type="checkbox" value="XL" class="size-check"> XL</label>
+          <label><input type="checkbox" value="XXL" class="size-check"> XXL</label>
+        </div>
+      </div>
+
+      <div class="admin-group">
+        <label>Colours Available</label>
+        <div id="colour-rows"></div>
+        <button class="btn btn-outline btn-sm" onclick="addColourRow()">+ Add Colour</button>
+      </div>
+
+      <div class="admin-group">
+        <label>Badge (optional)</label>
+        <select id="f-tag">
+          <option value="">None</option>
+          <option value="NEW">NEW</option>
+          <option value="BESTSELLER">BESTSELLER</option>
+          <option value="SALE">SALE</option>
+        </select>
+      </div>
+
+      <div class="admin-group">
+        <label>Product Description</label>
+        <textarea id="f-desc" rows="3" placeholder="Short description of the product"></textarea>
+      </div>
+
+      <div class="admin-group">
+        <label>Product Photos</label>
+        <input type="file" id="f-images" accept="image/*" multiple onchange="handleImageUpload(event)">
+        <p class="admin-hint">Upload as many as you like — the product page becomes swipeable automatically.</p>
+        <div class="thumb-row" id="image-thumbs"></div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:10px;">
+        <button class="btn btn-primary" onclick="saveProduct()">Save Product</button>
+        <button class="btn btn-outline" id="cancel-edit-btn" onclick="resetForm()" style="display:none;">Cancel Edit</button>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <h3>Existing Products (<span id="product-count">0</span>)</h3>
+      <div id="product-list"></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="site-footer"></div>
+
+<script src="js/settings.js"></script>
+<script src="js/main.js"></script>
+<script>
+let ghOwner = "", ghRepo = "", ghToken = "";
+let currentProducts = [];
+let currentSha = null;
+let currentImages = [];
+
+/* ---------- Auth / unlock ---------- */
+function unlockAdmin() {
+  ghOwner = document.getElementById("gh-owner").value.trim();
+  ghRepo = document.getElementById("gh-repo").value.trim();
+  ghToken = document.getElementById("gh-token").value.trim();
+  if (!ghOwner || !ghRepo || !ghToken) {
+    alert("Please fill in all three fields.");
+    return;
+  }
+  localStorage.setItem("eshwa_admin_owner", ghOwner);
+  localStorage.setItem("eshwa_admin_repo", ghRepo);
+  localStorage.setItem("eshwa_admin_token", ghToken);
+  showAdmin();
+}
+
+function showAdmin() {
+  document.getElementById("lock-screen").style.display = "none";
+  document.getElementById("admin-main").style.display = "block";
+  addColourRow();
+  fetchProducts();
+}
+
+function tryAutoLogin() {
+  const o = localStorage.getItem("eshwa_admin_owner");
+  const r = localStorage.getItem("eshwa_admin_repo");
+  const t = localStorage.getItem("eshwa_admin_token");
+  if (o && r && t) {
+    ghOwner = o; ghRepo = r; ghToken = t;
+    showAdmin();
+  }
+}
+
+/* ---------- Status messages ---------- */
+function setStatus(msg, type) {
+  const el = document.getElementById("status-msg");
+  el.textContent = msg;
+  el.className = "status-msg show " + type;
+}
+function clearStatus() {
+  document.getElementById("status-msg").className = "status-msg";
+}
+
+/* ---------- GitHub API helpers ---------- */
+function apiUrl(path) {
+  return `https://api.github.com/repos/${ghOwner}/${ghRepo}/contents/${path}`;
+}
+
+function utf8ToBase64(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function base64ToUtf8(str) {
+  return decodeURIComponent(escape(atob(str)));
+}
+
+async function fetchProducts() {
+  setStatus("Loading your products...", "loading");
+  try {
+    const res = await fetch(apiUrl("products.json"), {
+      headers: { Authorization: `token ${ghToken}` }
+    });
+    if (!res.ok) throw new Error(res.status === 404 ? "products.json not found in repo" : `GitHub error ${res.status}`);
+    const data = await res.json();
+    currentSha = data.sha;
+    currentProducts = JSON.parse(base64ToUtf8(data.content));
+    renderProductList();
+    clearStatus();
+  } catch (e) {
+    setStatus("Could not load products: " + e.message + ". Check your username/repo/token and try again.", "err");
+  }
+}
+
+async function pushProducts(commitMessage) {
+  const content = utf8ToBase64(JSON.stringify(currentProducts, null, 2));
+  const res = await fetch(apiUrl("products.json"), {
+    method: "PUT",
+    headers: {
+      Authorization: `token ${ghToken}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: commitMessage,
+      content: content,
+      sha: currentSha,
+      branch: "main"
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `GitHub error ${res.status}`);
+  }
+  const data = await res.json();
+  currentSha = data.content.sha;
+}
+
+/* ---------- Colour rows ---------- */
+function addColourRow(name, hex) {
+  const wrap = document.getElementById("colour-rows");
+  const row = document.createElement("div");
+  row.className = "colour-row-input";
+  row.innerHTML = `
+    <input type="text" placeholder="Colour name e.g. Maroon" class="colour-name" value="${name || ''}">
+    <input type="color" class="colour-hex" value="${hex || '#6b2323'}">
+    <button class="small-x" onclick="this.parentElement.remove()">✕</button>
+  `;
+  wrap.appendChild(row);
+}
+
+/* ---------- Image upload (auto-compressed so photos load fast) ---------- */
+function compressImage(file, maxWidth) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxWidth / img.width);
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg", 0.8));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleImageUpload(event) {
+  const files = Array.from(event.target.files);
+  for (const file of files) {
+    const compressed = await compressImage(file, 1000);
+    currentImages.push(compressed);
+  }
+  renderThumbs();
+  event.target.value = "";
+}
+
+function renderThumbs() {
+  const wrap = document.getElementById("image-thumbs");
+  wrap.innerHTML = currentImages.map((img, i) =>
+    `<div class="thumb"><img src="${img}"><button onclick="removeImage(${i})">✕</button></div>`
+  ).join("");
+}
+function removeImage(i) {
+  currentImages.splice(i, 1);
+  renderThumbs();
+}
+
+/* ---------- Form <-> product object ---------- */
+function resetForm() {
+  document.getElementById("edit-id").value = "";
+  document.getElementById("f-name").value = "";
+  document.getElementById("f-price").value = "";
+  document.getElementById("f-category").value = "kurties";
+  document.getElementById("f-stock").value = "";
+  document.getElementById("f-tag").value = "";
+  document.getElementById("f-desc").value = "";
+  document.querySelectorAll(".size-check").forEach(c => c.checked = false);
+  document.getElementById("colour-rows").innerHTML = "";
+  addColourRow();
+  currentImages = [];
+  renderThumbs();
+  document.getElementById("form-heading").textContent = "Add New Product";
+  document.getElementById("cancel-edit-btn").style.display = "none";
+  clearStatus();
+}
+
+function editProduct(id) {
+  const p = currentProducts.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById("edit-id").value = p.id;
+  document.getElementById("f-name").value = p.name;
+  document.getElementById("f-price").value = p.price;
+  document.getElementById("f-category").value = p.category;
+  document.getElementById("f-stock").value = p.stock;
+  document.getElementById("f-tag").value = p.tag || "";
+  document.getElementById("f-desc").value = p.description || "";
+  document.querySelectorAll(".size-check").forEach(c => c.checked = p.sizes.includes(c.value));
+  document.getElementById("colour-rows").innerHTML = "";
+  p.colours.forEach(c => addColourRow(c.name, c.hex));
+  currentImages = [...p.images];
+  renderThumbs();
+  document.getElementById("form-heading").textContent = "Edit Product";
+  document.getElementById("cancel-edit-btn").style.display = "inline-block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function slugify(text) {
+  return text.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+async function saveProduct() {
+  const name = document.getElementById("f-name").value.trim();
+  const price = parseFloat(document.getElementById("f-price").value);
+  const category = document.getElementById("f-category").value;
+  const stock = parseInt(document.getElementById("f-stock").value) || 0;
+  const tag = document.getElementById("f-tag").value;
+  const description = document.getElementById("f-desc").value.trim();
+  const sizes = Array.from(document.querySelectorAll(".size-check:checked")).map(c => c.value);
+  const colours = Array.from(document.querySelectorAll(".colour-row-input")).map(row => ({
+    name: row.querySelector(".colour-name").value.trim(),
+    hex: row.querySelector(".colour-hex").value
+  })).filter(c => c.name);
+
+  if (!name || !price || sizes.length === 0 || colours.length === 0 || currentImages.length === 0) {
+    setStatus("Please fill in name, price, at least one size, one colour, and at least one photo.", "err");
+    return;
+  }
+
+  const editId = document.getElementById("edit-id").value;
+  const id = editId || slugify(name) + "-" + Date.now().toString().slice(-5);
+
+  const productObj = { id, name, price, category, sizes, colours, stock, description, images: currentImages };
+  if (tag) productObj.tag = tag;
+
+  setStatus("Saving to GitHub...", "loading");
+  try {
+    if (editId) {
+      const idx = currentProducts.findIndex(p => p.id === editId);
+      currentProducts[idx] = productObj;
+      await pushProducts(`Update product: ${name}`);
+    } else {
+      currentProducts.push(productObj);
+      await pushProducts(`Add product: ${name}`);
+    }
+    setStatus("Saved! Your live site will update in about a minute.", "ok");
+    resetForm();
+    renderProductList();
+  } catch (e) {
+    setStatus("Save failed: " + e.message, "err");
+  }
+}
+
+async function deleteProduct(id) {
+  const p = currentProducts.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`Delete "${p.name}"? This can't be undone.`)) return;
+  setStatus("Deleting...", "loading");
+  try {
+    currentProducts = currentProducts.filter(x => x.id !== id);
+    await pushProducts(`Delete product: ${p.name}`);
+    setStatus("Deleted. Your live site will update in about a minute.", "ok");
+    renderProductList();
+  } catch (e) {
+    setStatus("Delete failed: " + e.message, "err");
+  }
+}
+
+function renderProductList() {
+  document.getElementById("product-count").textContent = currentProducts.length;
+  const wrap = document.getElementById("product-list");
+  if (currentProducts.length === 0) {
+    wrap.innerHTML = `<p style="color:var(--brown);font-size:13px;">No products yet — add your first one above.</p>`;
+    return;
+  }
+  wrap.innerHTML = currentProducts.map(p => `
+    <div class="product-row">
+      <img src="${p.images[0]}" alt="${p.name}">
+      <div class="pname">${p.name}</div>
+      <div class="pprice">₹${p.price}</div>
+      <button class="btn btn-outline btn-sm" onclick="editProduct('${p.id}')">Edit</button>
+      <button class="btn btn-sm" style="color:#8b2020;" onclick="deleteProduct('${p.id}')">Delete</button>
+    </div>
+  `).join("");
+}
+
+document.addEventListener("DOMContentLoaded", tryAutoLogin);
+</script>
+</body>
+</html>

@@ -143,7 +143,6 @@ function renderFooter() {
           <div>
             <h4>Customer Service</h4>
             <a href="#">Shipping Policy</a><br/>
-            <a href="#">Return Policy</a><br/>
             <a href="#">Privacy Policy</a><br/>
             <a href="#">Terms & Conditions</a>
           </div>

@@ -22,12 +22,13 @@
 <div id="site-footer"></div>
 
 <script src="js/settings.js"></script>
-<script src="js/products.js"></script>
+<script src="js/products-loader.js"></script>
 <script src="js/main.js"></script>
 <script>
-let selectedPayment = "cod";
+let selectedPayment = "netbanking";
 
-function renderCheckout() {
+async function renderCheckout() {
+  await loadProducts();
   const cart = getCart();
   const root = document.getElementById("checkout-root");
 
@@ -82,13 +83,13 @@ function renderCheckout() {
         </div>
 
         <h3 style="margin-top:26px;">Payment Method</h3>
-        <label class="pay-option selected" id="opt-cod">
-          <input type="radio" name="pay" value="cod" checked onchange="setPayment('cod')">
-          <div><strong>Cash on Delivery</strong><span>Pay when your order arrives</span></div>
+        <label class="pay-option selected" id="opt-netbanking">
+          <input type="radio" name="pay" value="netbanking" checked onchange="setPayment('netbanking')">
+          <div><strong>Net Banking</strong><span>Pay securely using your bank</span></div>
         </label>
         <label class="pay-option" id="opt-upi">
           <input type="radio" name="pay" value="upi" onchange="setPayment('upi')">
-          <div><strong>UPI / GPay / PhonePe</strong><span>We'll share payment details on WhatsApp to confirm your order</span></div>
+          <div><strong>GPay / PhonePe (UPI)</strong><span>We'll share payment details on WhatsApp to confirm your order</span></div>
         </label>
 
         <button class="btn btn-primary btn-block" style="margin-top:20px;" onclick="placeOrder()">Place Order via WhatsApp</button>
@@ -102,8 +103,8 @@ function renderCheckout() {
         <div class="summary-line total"><span>Total</span><span>${STORE.currencySymbol}${grandTotal}</span></div>
         <div class="trust-row">
           <div>🔒<br>Secure<br>Payments</div>
-          <div>↺<br>Easy<br>Returns</div>
-          <div>✓<br>100%<br>Satisfaction</div>
+          <div>🚚<br>Pan India<br>Delivery</div>
+          <div>✓<br>Quality<br>Assured</div>
         </div>
       </div>
     </div>
@@ -112,7 +113,7 @@ function renderCheckout() {
 
 function setPayment(method) {
   selectedPayment = method;
-  document.getElementById("opt-cod").classList.toggle("selected", method === "cod");
+  document.getElementById("opt-netbanking").classList.toggle("selected", method === "netbanking");
   document.getElementById("opt-upi").classList.toggle("selected", method === "upi");
 }
 
@@ -134,7 +135,7 @@ function placeOrder() {
   const grandTotal = total + shipping;
 
   let message = `*New Order — Eshwa Apparels*\n\n`;
-  message += `*Customer:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}, ${state} - ${pincode}\n*Payment:* ${selectedPayment === "cod" ? "Cash on Delivery" : "UPI / GPay / PhonePe"}\n\n*Items:*\n`;
+  message += `*Customer:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}, ${state} - ${pincode}\n*Payment:* ${selectedPayment === "netbanking" ? "Net Banking" : "GPay / PhonePe (UPI)"}\n\n*Items:*\n`;
   cart.forEach(item => {
     const p = PRODUCTS.find(x => x.id === item.productId);
     if (p) message += `- ${p.name} | Size: ${item.size} | Colour: ${item.colour} | Qty: ${item.qty} | ${STORE.currencySymbol}${p.price * item.qty}\n`;

@@ -17,13 +17,38 @@ A free, static e-commerce style website for your kurti business. No backend, no 
 ## How checkout works (important)
 There's no real payment gateway wired in yet — that needs a business KYC with a
 provider like Razorpay or Instamojo, which is a separate step. For now, checkout
-collects the customer's delivery details and payment preference (COD or UPI), then
-opens WhatsApp with the full order pre-filled as a message to your number, so you
-receive every order instantly and confirm/collect payment manually. This is how most
-small D2C clothing brands in India start out — completely free.
+collects the customer's delivery details and payment preference (Net Banking or
+GPay/PhonePe UPI), then opens WhatsApp with the full order pre-filled as a message
+to your number, so you receive every order instantly and confirm/collect payment
+manually. This is how most small D2C clothing brands in India start out —
+completely free.
 
 When you're ready for real online payments, Razorpay's Payment Links or Payment
 Pages are the easiest next step and are also free to set up.
+
+## Managing products from your website (no code needed)
+
+Go to **yoursite.vercel.app/admin.html** — this is a private admin page where you
+can add, edit, or delete products directly from your browser: name, price,
+sizes, colours, stock, description, and as many photos as you want (they're
+compressed automatically so the site stays fast).
+
+**One-time setup:**
+1. On the admin page, it'll ask for your GitHub username, repo name
+   (`eshwa-apparels`), and a GitHub Personal Access Token.
+2. To get a token: go to https://github.com/settings/tokens/new → give it any
+   name → tick the **repo** checkbox → click **Generate token** → copy it and
+   paste it into the admin page. (Full steps are also shown on the admin page
+   itself.)
+3. This token is saved only in your own browser — never share it with anyone,
+   since it lets whoever has it edit your site.
+
+Once unlocked, every product you add/edit/delete there is saved straight to
+your GitHub repository, and Vercel automatically redeploys — your live site
+updates within about a minute, with **no VS Code, no git, no code required.**
+
+Bookmark the admin page on your phone or laptop and manage your store from
+anywhere.
 
 ## STEP 1 — Edit your details
 Open `js/settings.js` and change:

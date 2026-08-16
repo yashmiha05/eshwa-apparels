@@ -6,9 +6,9 @@
 const STORE = {
   name: "ESHWA",
   tagline: "APPARELS",
-  whatsappNumber: "911234567890",      // country code + number, no + or spaces
-  contactEmail: "support@eshwa.com",
-  instagram: "@apparelsbyeshwa",
+  whatsappNumber: "919489654501",      // country code + number, no + or spaces
+  contactEmail: "apparelsbyeshwa@gmail.com",
+  instagram: "@apparelsby_eshwa",
   freeShippingAbove: 1999,
   currencySymbol: "₹"
 };

@@ -20,7 +20,7 @@
 <div id="site-footer"></div>
 
 <script src="js/settings.js"></script>
-<script src="js/products.js"></script>
+<script src="js/products-loader.js"></script>
 <script src="js/main.js"></script>
 <script>
 let currentProduct = null;
@@ -32,7 +32,8 @@ function getProductIdFromURL() {
   return new URLSearchParams(window.location.search).get("id");
 }
 
-function loadProduct() {
+async function loadProduct() {
+  await loadProducts();
   const id = getProductIdFromURL();
   currentProduct = PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
   selectedSize = currentProduct.sizes[0];
