@@ -62,36 +62,6 @@
     ]
   },
   {
-    "id": "peach-printed-kurti",
-    "name": "Eshwa Peach Printed Kurti",
-    "price": 1299,
-    "category": "kurties",
-    "tag": "NEW",
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
-    "colours": [
-      {
-        "name": "Peach",
-        "hex": "#c98f7a"
-      },
-      {
-        "name": "Mint",
-        "hex": "#8bb59a"
-      }
-    ],
-    "stock": 4,
-    "description": "Soft peach kurti with all-over printed pattern — lightweight and perfect for daily wear.",
-    "images": [
-      "images/products/peach-printed-kurti-1.svg",
-      "images/products/peach-printed-kurti-2.svg",
-      "images/products/peach-printed-kurti-3.svg"
-    ]
-  },
-  {
     "id": "mustard-anarkali-kurti",
     "name": "Eshwa Mustard Anarkali Kurti",
     "price": 1799,
