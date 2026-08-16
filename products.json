@@ -92,32 +92,6 @@
     ]
   },
   {
-    "id": "teal-two-piece-set",
-    "name": "Eshwa Teal Two Piece Set",
-    "price": 2199,
-    "category": "2-piece",
-    "tag": "NEW",
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
-    "colours": [
-      {
-        "name": "Teal",
-        "hex": "#2f5d5a"
-      }
-    ],
-    "stock": 3,
-    "description": "Matching teal kurti and palazzo set with subtle embroidery — a complete festive-ready outfit.",
-    "images": [
-      "images/products/teal-two-piece-set-1.svg",
-      "images/products/teal-two-piece-set-2.svg",
-      "images/products/teal-two-piece-set-3.svg"
-    ]
-  },
-  {
     "id": "blush-three-piece-set",
     "name": "Eshwa Blush Three Piece Set",
     "price": 2799,
