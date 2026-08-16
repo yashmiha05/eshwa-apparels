@@ -1,36 +1,5 @@
 [
   {
-    "id": "maroon-zari-kurti",
-    "name": "Eshwa Maroon Zari Kurti",
-    "price": 1499,
-    "category": "kurties",
-    "tag": "NEW",
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
-    "colours": [
-      {
-        "name": "Maroon",
-        "hex": "#6b2323"
-      },
-      {
-        "name": "Deep Red",
-        "hex": "#8b2020"
-      }
-    ],
-    "stock": 3,
-    "description": "Beautiful maroon kurti with zari work and elegant embroidery. Perfect for festive occasions.",
-    "images": [
-      "images/products/maroon-zari-kurti-1.svg",
-      "images/products/maroon-zari-kurti-2.svg",
-      "images/products/maroon-zari-kurti-3.svg",
-      "images/products/maroon-zari-kurti-4.svg"
-    ]
-  },
-  {
     "id": "beige-embroidered-kurti",
     "name": "Eshwa Beige Embroidered Kurti",
     "price": 1399,
@@ -59,36 +28,6 @@
       "images/products/beige-embroidered-kurti-2.svg",
       "images/products/beige-embroidered-kurti-3.svg",
       "images/products/beige-embroidered-kurti-4.svg"
-    ]
-  },
-  {
-    "id": "mustard-anarkali-kurti",
-    "name": "Eshwa Mustard Anarkali Kurti",
-    "price": 1799,
-    "category": "kurties",
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
-    "colours": [
-      {
-        "name": "Mustard",
-        "hex": "#b8860b"
-      },
-      {
-        "name": "Rust",
-        "hex": "#a0522d"
-      }
-    ],
-    "stock": 6,
-    "description": "Flared Anarkali-style kurti in rich mustard, finished with a decorative neckline.",
-    "images": [
-      "images/products/mustard-anarkali-kurti-1.svg",
-      "images/products/mustard-anarkali-kurti-2.svg",
-      "images/products/mustard-anarkali-kurti-3.svg",
-      "images/products/mustard-anarkali-kurti-4.svg"
     ]
   },
   {
