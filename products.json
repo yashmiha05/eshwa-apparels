@@ -62,37 +62,6 @@
     ]
   },
   {
-    "id": "olive-floral-kurti",
-    "name": "Eshwa Olive Floral Kurti",
-    "price": 1549,
-    "category": "kurties",
-    "tag": "NEW",
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "XXL"
-    ],
-    "colours": [
-      {
-        "name": "Olive",
-        "hex": "#5c6b3c"
-      },
-      {
-        "name": "Charcoal",
-        "hex": "#3a3a3a"
-      }
-    ],
-    "stock": 2,
-    "description": "Relaxed-fit olive kurti with a delicate floral print, ideal for casual outings.",
-    "images": [
-      "images/products/olive-floral-kurti-1.svg",
-      "images/products/olive-floral-kurti-2.svg",
-      "images/products/olive-floral-kurti-3.svg"
-    ]
-  },
-  {
     "id": "peach-printed-kurti",
     "name": "Eshwa Peach Printed Kurti",
     "price": 1299,
