@@ -1,29 +1,5 @@
 [
   {
-    "id": "blush-three-piece-set",
-    "name": "Eshwa Blush Three Piece Set",
-    "price": 2799,
-    "category": "3-piece",
-    "sizes": [
-      "S",
-      "M",
-      "L"
-    ],
-    "colours": [
-      {
-        "name": "Blush Pink",
-        "hex": "#c48a8a"
-      }
-    ],
-    "stock": 2,
-    "description": "Kurti, dupatta and bottom set in soft blush pink with delicate detailing, made for special occasions.",
-    "images": [
-      "images/products/blush-three-piece-set-1.svg",
-      "images/products/blush-three-piece-set-2.svg",
-      "images/products/blush-three-piece-set-3.svg"
-    ]
-  },
-  {
     "id": "charcoal-straight-kurti",
     "name": "Eshwa Charcoal Straight Kurti",
     "price": 1349,
