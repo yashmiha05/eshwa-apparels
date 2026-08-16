@@ -1,36 +1,5 @@
 [
   {
-    "id": "beige-embroidered-kurti",
-    "name": "Eshwa Beige Embroidered Kurti",
-    "price": 1399,
-    "category": "kurties",
-    "tag": "NEW",
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
-    "colours": [
-      {
-        "name": "Beige",
-        "hex": "#c9a874"
-      },
-      {
-        "name": "Sage Green",
-        "hex": "#8ba888"
-      }
-    ],
-    "stock": 5,
-    "description": "Elegant beige kurti with fine embroidery detailing, crafted from breathable fabric for everyday comfort.",
-    "images": [
-      "images/products/beige-embroidered-kurti-1.svg",
-      "images/products/beige-embroidered-kurti-2.svg",
-      "images/products/beige-embroidered-kurti-3.svg",
-      "images/products/beige-embroidered-kurti-4.svg"
-    ]
-  },
-  {
     "id": "blush-three-piece-set",
     "name": "Eshwa Blush Three Piece Set",
     "price": 2799,
