@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Eshwa Apparels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="container">
+  <div class="section-heading" style="margin-top:30px;">
+    <h2>CHECKOUT</h2>
+  </div>
+  <div id="checkout-root"></div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="js/settings.js"></script>
+<script src="js/products.js"></script>
+<script src="js/main.js"></script>
+<script>
+let selectedPayment = "cod";
+
+function renderCheckout() {
+  const cart = getCart();
+  const root = document.getElementById("checkout-root");
+
+  if (cart.length === 0) {
+    root.innerHTML = `
+      <div class="empty-state">
+        <h2>Your cart is empty</h2>
+        <p>Add some products before checking out.</p><br>
+        <a href="shop.html" class="btn btn-primary">Go to Shop</a>
+      </div>
+    `;
+    return;
+  }
+
+  const summaryLines = cart.map(item => {
+    const p = PRODUCTS.find(x => x.id === item.productId);
+    if (!p) return "";
+    return `<div class="summary-line"><span>${p.name} (${item.size}) × ${item.qty}</span><span>${STORE.currencySymbol}${p.price * item.qty}</span></div>`;
+  }).join("");
+
+  const total = cartTotal();
+  const shipping = total >= STORE.freeShippingAbove ? 0 : 99;
+  const grandTotal = total + shipping;
+
+  root.innerHTML = `
+    <div class="checkout-grid">
+      <div class="form-card">
+        <h3>Delivery Details</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="cust-name" placeholder="Enter your full name">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="cust-phone" placeholder="Enter your phone number">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Address</label>
+          <textarea id="cust-address" rows="3" placeholder="Enter your complete address"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Pincode</label>
+            <input type="text" id="cust-pincode" placeholder="Enter pincode">
+          </div>
+          <div class="form-group">
+            <label>State</label>
+            <input type="text" id="cust-state" placeholder="Enter your state">
+          </div>
+        </div>
+
+        <h3 style="margin-top:26px;">Payment Method</h3>
+        <label class="pay-option selected" id="opt-cod">
+          <input type="radio" name="pay" value="cod" checked onchange="setPayment('cod')">
+          <div><strong>Cash on Delivery</strong><span>Pay when your order arrives</span></div>
+        </label>
+        <label class="pay-option" id="opt-upi">
+          <input type="radio" name="pay" value="upi" onchange="setPayment('upi')">
+          <div><strong>UPI / GPay / PhonePe</strong><span>We'll share payment details on WhatsApp to confirm your order</span></div>
+        </label>
+
+        <button class="btn btn-primary btn-block" style="margin-top:20px;" onclick="placeOrder()">Place Order via WhatsApp</button>
+      </div>
+
+      <div class="summary-card">
+        <h3>Order Summary</h3>
+        ${summaryLines}
+        <div class="summary-line"><span>Subtotal</span><span>${STORE.currencySymbol}${total}</span></div>
+        <div class="summary-line"><span>Shipping</span><span>${shipping === 0 ? "FREE" : STORE.currencySymbol + shipping}</span></div>
+        <div class="summary-line total"><span>Total</span><span>${STORE.currencySymbol}${grandTotal}</span></div>
+        <div class="trust-row">
+          <div>🔒<br>Secure<br>Payments</div>
+          <div>↺<br>Easy<br>Returns</div>
+          <div>✓<br>100%<br>Satisfaction</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function setPayment(method) {
+  selectedPayment = method;
+  document.getElementById("opt-cod").classList.toggle("selected", method === "cod");
+  document.getElementById("opt-upi").classList.toggle("selected", method === "upi");
+}
+
+function placeOrder() {
+  const name = document.getElementById("cust-name").value.trim();
+  const phone = document.getElementById("cust-phone").value.trim();
+  const address = document.getElementById("cust-address").value.trim();
+  const pincode = document.getElementById("cust-pincode").value.trim();
+  const state = document.getElementById("cust-state").value.trim();
+
+  if (!name || !phone || !address || !pincode || !state) {
+    showToast("Please fill in all delivery details");
+    return;
+  }
+
+  const cart = getCart();
+  const total = cartTotal();
+  const shipping = total >= STORE.freeShippingAbove ? 0 : 99;
+  const grandTotal = total + shipping;
+
+  let message = `*New Order — Eshwa Apparels*\n\n`;
+  message += `*Customer:* ${name}\n*Phone:* ${phone}\n*Address:* ${address}, ${state} - ${pincode}\n*Payment:* ${selectedPayment === "cod" ? "Cash on Delivery" : "UPI / GPay / PhonePe"}\n\n*Items:*\n`;
+  cart.forEach(item => {
+    const p = PRODUCTS.find(x => x.id === item.productId);
+    if (p) message += `- ${p.name} | Size: ${item.size} | Colour: ${item.colour} | Qty: ${item.qty} | ${STORE.currencySymbol}${p.price * item.qty}\n`;
+  });
+  message += `\nSubtotal: ${STORE.currencySymbol}${total}\nShipping: ${shipping === 0 ? "FREE" : STORE.currencySymbol + shipping}\n*Grand Total: ${STORE.currencySymbol}${grandTotal}*`;
+
+  const encoded = encodeURIComponent(message);
+  const waLink = `https://wa.me/${STORE.whatsappNumber}?text=${encoded}`;
+
+  localStorage.removeItem(CART_KEY);
+  window.location.href = waLink;
+}
+
+document.addEventListener("DOMContentLoaded", renderCheckout);
+</script>
+</body>
+</html>

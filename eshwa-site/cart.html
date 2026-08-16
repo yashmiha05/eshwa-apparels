@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Cart — Eshwa Apparels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="container">
+  <div class="section-heading" style="margin-top:30px;">
+    <h2>YOUR CART</h2>
+  </div>
+  <div id="cart-root"></div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="js/settings.js"></script>
+<script src="js/products.js"></script>
+<script src="js/main.js"></script>
+<script>
+function renderCartPage() {
+  const cart = getCart();
+  const root = document.getElementById("cart-root");
+
+  if (cart.length === 0) {
+    root.innerHTML = `
+      <div class="empty-state">
+        <h2>Your cart is empty</h2>
+        <p>Looks like you haven't added anything yet.</p>
+        <br>
+        <a href="shop.html" class="btn btn-primary">Continue Shopping</a>
+      </div>
+    `;
+    return;
+  }
+
+  const rows = cart.map((item, index) => {
+    const p = PRODUCTS.find(x => x.id === item.productId);
+    if (!p) return "";
+    const colourObj = p.colours.find(c => c.name === item.colour) || p.colours[0];
+    const lineTotal = p.price * item.qty;
+    return `
+      <tr>
+        <td>
+          <div class="cart-product">
+            <img src="${p.images[0]}" alt="${p.name}">
+            <div>
+              <div class="cart-product-name">${p.name}</div>
+              <div class="cart-product-meta">Size: ${item.size} &nbsp;|&nbsp; Colour: ${item.colour}</div>
+            </div>
+          </div>
+        </td>
+        <td>${item.size}</td>
+        <td><span class="swatch" style="background:${colourObj.hex};display:inline-block;width:15px;height:15px;border-radius:50%;"></span></td>
+        <td>${STORE.currencySymbol}${p.price}</td>
+        <td>
+          <div class="qty-control">
+            <button onclick="changeQty(${index}, ${item.qty - 1})">−</button>
+            <span>${item.qty}</span>
+            <button onclick="changeQty(${index}, ${item.qty + 1})">+</button>
+          </div>
+        </td>
+        <td>${STORE.currencySymbol}${lineTotal}</td>
+        <td><button class="remove-btn" onclick="removeItem(${index})" aria-label="Remove">🗑</button></td>
+      </tr>
+    `;
+  }).join("");
+
+  root.innerHTML = `
+    <table class="cart-table">
+      <thead>
+        <tr><th>Product</th><th>Size</th><th>Colour</th><th>Price</th><th>Quantity</th><th>Total</th><th></th></tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="cart-summary-row">
+      <a href="shop.html" class="btn btn-outline">← Continue Shopping</a>
+      <div style="display:flex;align-items:center;gap:20px;">
+        <div class="grand-total">Grand Total: ${STORE.currencySymbol}${cartTotal()}</div>
+        <a href="checkout.html" class="btn btn-primary">Checkout</a>
+      </div>
+    </div>
+  `;
+}
+
+function changeQty(index, qty) {
+  updateCartQty(index, qty);
+  renderCartPage();
+}
+function removeItem(index) {
+  removeFromCart(index);
+  renderCartPage();
+}
+
+document.addEventListener("DOMContentLoaded", renderCartPage);
+</script>
+</body>
+</html>

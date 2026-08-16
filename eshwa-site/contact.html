@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us — Eshwa Apparels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="container">
+  <div class="static-page">
+    <h1>Contact Us</h1>
+    <p>Have a question about sizing, an order, or a custom request? Reach out — we usually reply within a few hours.</p>
+    <h3>WhatsApp</h3>
+    <p id="contact-whatsapp"></p>
+    <h3>Email</h3>
+    <p id="contact-email"></p>
+    <h3>Instagram</h3>
+    <p id="contact-insta"></p>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="js/settings.js"></script>
+<script src="js/products.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.getElementById("contact-whatsapp").textContent = "+" + STORE.whatsappNumber;
+  document.getElementById("contact-email").textContent = STORE.contactEmail;
+  document.getElementById("contact-insta").textContent = STORE.instagram;
+</script>
+</body>
+</html>

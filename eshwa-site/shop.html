@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — Eshwa Apparels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="container">
+  <div class="breadcrumb"><a href="index.html">Home</a> &nbsp;›&nbsp; Shop</div>
+  <div class="section-heading">
+    <h2>SHOP ALL</h2>
+    <p>Find your perfect fit</p>
+  </div>
+
+  <div class="filter-pills">
+    <button class="filter-pill active" data-cat="all">ALL</button>
+    <button class="filter-pill" data-cat="kurties">KURTIES</button>
+    <button class="filter-pill" data-cat="2-piece">2 PIECE SETS</button>
+    <button class="filter-pill" data-cat="3-piece">3 PIECE SETS</button>
+  </div>
+
+  <div class="product-grid" id="shop-grid"></div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="js/settings.js"></script>
+<script src="js/products.js"></script>
+<script src="js/main.js"></script>
+<script>
+  function loadShop(cat) {
+    const filtered = cat === "all" ? PRODUCTS : PRODUCTS.filter(p => p.category === cat);
+    renderProductGrid("shop-grid", filtered);
+  }
+  document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const initialCat = params.get("cat") || "all";
+    document.querySelectorAll(".filter-pill").forEach(btn => {
+      if (btn.dataset.cat === initialCat) btn.classList.add("active");
+      else btn.classList.remove("active");
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-pill").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        loadShop(btn.dataset.cat);
+      });
+    });
+    loadShop(initialCat);
+  });
+</script>
+</body>
+</html>

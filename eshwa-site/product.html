@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Product — Eshwa Apparels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<div class="container">
+  <div class="breadcrumb" id="breadcrumb"></div>
+  <div class="pdp" id="pdp-root"></div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="js/settings.js"></script>
+<script src="js/products.js"></script>
+<script src="js/main.js"></script>
+<script>
+let currentProduct = null;
+let currentImageIndex = 0;
+let selectedSize = null;
+let selectedColour = null;
+
+function getProductIdFromURL() {
+  return new URLSearchParams(window.location.search).get("id");
+}
+
+function loadProduct() {
+  const id = getProductIdFromURL();
+  currentProduct = PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
+  selectedSize = currentProduct.sizes[0];
+  selectedColour = currentProduct.colours[0].name;
+  currentImageIndex = 0;
+
+  document.getElementById("page-title").textContent = currentProduct.name + " — Eshwa Apparels";
+  document.getElementById("breadcrumb").innerHTML =
+    `<a href="index.html">Home</a> &nbsp;›&nbsp; <a href="shop.html?cat=${currentProduct.category}">Kurties</a> &nbsp;›&nbsp; ${currentProduct.name}`;
+
+  renderPDP();
+}
+
+function renderPDP() {
+  const p = currentProduct;
+  const thumbs = p.images.map((img, i) =>
+    `<div class="pdp-thumb ${i === currentImageIndex ? 'active' : ''}" onclick="setImage(${i})">
+       <img src="${img}" alt="${p.name} photo ${i+1}">
+     </div>`
+  ).join("");
+
+  const dots = p.images.map((_, i) =>
+    `<span class="${i === currentImageIndex ? 'active' : ''}"></span>`
+  ).join("");
+
+  const sizeButtons = p.sizes.map(s =>
+    `<button class="size-btn ${s === selectedSize ? 'selected' : ''}" onclick="selectSize('${s}')">${s}</button>`
+  ).join("");
+
+  const colourSwatches = p.colours.map(c =>
+    `<span class="colour-swatch ${c.name === selectedColour ? 'selected' : ''}" style="background:${c.hex}" title="${c.name}" onclick="selectColour('${c.name}')"></span>`
+  ).join("");
+
+  document.getElementById("pdp-root").innerHTML = `
+    <div class="pdp-thumbs">${thumbs}</div>
+    <div>
+      <div class="pdp-main-image" id="main-image-wrap">
+        <img src="${p.images[currentImageIndex]}" alt="${p.name}" id="main-image">
+      </div>
+      <div class="pdp-dots" id="pdp-dots" style="display:flex">${dots}</div>
+    </div>
+    <div class="pdp-info">
+      <h1>${p.name}</h1>
+      <div class="pdp-price">${STORE.currencySymbol}${p.price}</div>
+
+      <div class="pdp-block">
+        <label>Sizes Available</label>
+        <div class="size-row">${sizeButtons}</div>
+      </div>
+
+      <div class="pdp-block">
+        <label>Colours Available</label>
+        <div class="colour-row">${colourSwatches}</div>
+      </div>
+
+      <div class="pdp-block">
+        <label>Stock Left</label>
+        <div>${p.stock} unit${p.stock === 1 ? '' : 's'}</div>
+      </div>
+
+      <div class="pdp-block">
+        <label>Product Details</label>
+        <p class="pdp-desc">${p.description}</p>
+      </div>
+
+      <div class="pdp-actions">
+        <button class="btn btn-primary btn-block" onclick="buyNow()">Buy Now</button>
+        <button class="btn btn-outline btn-block" onclick="addToCartFromPDP()">Add to Cart</button>
+      </div>
+      <div class="pdp-wishlist">♡ Add to Wishlist</div>
+    </div>
+  `;
+  attachSwipe();
+}
+
+function setImage(i) {
+  currentImageIndex = i;
+  renderPDP();
+}
+
+function selectSize(s) { selectedSize = s; renderPDP(); }
+function selectColour(c) { selectedColour = c; renderPDP(); }
+
+function addToCartFromPDP() {
+  addToCart(currentProduct.id, selectedSize, selectedColour, 1);
+  showToast(`${currentProduct.name} added to cart`);
+}
+
+function buyNow() {
+  addToCart(currentProduct.id, selectedSize, selectedColour, 1);
+  window.location.href = "cart.html";
+}
+
+/* Swipe support, Amazon-style */
+function attachSwipe() {
+  const wrap = document.getElementById("main-image-wrap");
+  if (!wrap) return;
+  let startX = 0;
+  let isTouch = false;
+
+  wrap.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    isTouch = true;
+  }, { passive: true });
+
+  wrap.addEventListener("touchend", (e) => {
+    if (!isTouch) return;
+    const endX = e.changedTouches[0].clientX;
+    const diff = endX - startX;
+    if (Math.abs(diff) > 40) {
+      if (diff < 0) nextImage(); else prevImage();
+    }
+    isTouch = false;
+  });
+}
+
+function nextImage() {
+  currentImageIndex = (currentImageIndex + 1) % currentProduct.images.length;
+  renderPDP();
+}
+function prevImage() {
+  currentImageIndex = (currentImageIndex - 1 + currentProduct.images.length) % currentProduct.images.length;
+  renderPDP();
+}
+
+document.addEventListener("DOMContentLoaded", loadProduct);
+</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+/* ============================================================
+   ESHWA APPARELS — PRODUCT DATA
+   ============================================================
+   HOW TO ADD A NEW PRODUCT:
+   1. Copy one of the objects below (from { to },)
+   2. Give it a unique "id" (no spaces, use dashes)
+   3. Fill in name, price, category, sizes, colours, stock, description
+   4. Add your photos to images/products/ and list their filenames in "images"
+      (you can add as many photos as you want — 1, 3, 5, whatever)
+   5. Save this file — the whole site updates automatically, no coding needed.
+
+   CATEGORIES must be one of: "kurties", "2-piece", "3-piece"
+   ============================================================ */
+
+const PRODUCTS = [
+  {
+    id: "maroon-zari-kurti",
+    name: "Eshwa Maroon Zari Kurti",
+    price: 1499,
+    category: "kurties",
+    tag: "NEW",
+    sizes: ["S", "M", "L", "XL"],
+    colours: [
+      { name: "Maroon", hex: "#6b2323" },
+      { name: "Deep Red", hex: "#8b2020" }
+    ],
+    stock: 3,
+    description: "Beautiful maroon kurti with zari work and elegant embroidery. Perfect for festive occasions.",
+    images: [
+      "images/products/maroon-zari-kurti-1.svg",
+      "images/products/maroon-zari-kurti-2.svg",
+      "images/products/maroon-zari-kurti-3.svg",
+      "images/products/maroon-zari-kurti-4.svg"
+    ]
+  },
+  {
+    id: "beige-embroidered-kurti",
+    name: "Eshwa Beige Embroidered Kurti",
+    price: 1399,
+    category: "kurties",
+    tag: "NEW",
+    sizes: ["S", "M", "L", "XL"],
+    colours: [
+      { name: "Beige", hex: "#c9a874" },
+      { name: "Sage Green", hex: "#8ba888" }
+    ],
+    stock: 5,
+    description: "Elegant beige kurti with fine embroidery detailing, crafted from breathable fabric for everyday comfort.",
+    images: [
+      "images/products/beige-embroidered-kurti-1.svg",
+      "images/products/beige-embroidered-kurti-2.svg",
+      "images/products/beige-embroidered-kurti-3.svg",
+      "images/products/beige-embroidered-kurti-4.svg"
+    ]
+  },
+  {
+    id: "olive-floral-kurti",
+    name: "Eshwa Olive Floral Kurti",
+    price: 1549,
+    category: "kurties",
+    tag: "NEW",
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    colours: [
+      { name: "Olive", hex: "#5c6b3c" },
+      { name: "Charcoal", hex: "#3a3a3a" }
+    ],
+    stock: 2,
+    description: "Relaxed-fit olive kurti with a delicate floral print, ideal for casual outings.",
+    images: [
+      "images/products/olive-floral-kurti-1.svg",
+      "images/products/olive-floral-kurti-2.svg",
+      "images/products/olive-floral-kurti-3.svg"
+    ]
+  },
+  {
+    id: "peach-printed-kurti",
+    name: "Eshwa Peach Printed Kurti",
+    price: 1299,
+    category: "kurties",
+    tag: "NEW",
+    sizes: ["S", "M", "L", "XL"],
+    colours: [
+      { name: "Peach", hex: "#c98f7a" },
+      { name: "Mint", hex: "#8bb59a" }
+    ],
+    stock: 4,
+    description: "Soft peach kurti with all-over printed pattern — lightweight and perfect for daily wear.",
+    images: [
+      "images/products/peach-printed-kurti-1.svg",
+      "images/products/peach-printed-kurti-2.svg",
+      "images/products/peach-printed-kurti-3.svg"
+    ]
+  },
+  {
+    id: "mustard-anarkali-kurti",
+    name: "Eshwa Mustard Anarkali Kurti",
+    price: 1799,
+    category: "kurties",
+    sizes: ["S", "M", "L", "XL"],
+    colours: [
+      { name: "Mustard", hex: "#b8860b" },
+      { name: "Rust", hex: "#a0522d" }
+    ],
+    stock: 6,
+    description: "Flared Anarkali-style kurti in rich mustard, finished with a decorative neckline.",
+    images: [
+      "images/products/mustard-anarkali-kurti-1.svg",
+      "images/products/mustard-anarkali-kurti-2.svg",
+      "images/products/mustard-anarkali-kurti-3.svg",
+      "images/products/mustard-anarkali-kurti-4.svg"
+    ]
+  },
+  {
+    id: "teal-two-piece-set",
+    name: "Eshwa Teal Two Piece Set",
+    price: 2199,
+    category: "2-piece",
+    tag: "NEW",
+    sizes: ["S", "M", "L", "XL"],
+    colours: [
+      { name: "Teal", hex: "#2f5d5a" }
+    ],
+    stock: 3,
+    description: "Matching teal kurti and palazzo set with subtle embroidery — a complete festive-ready outfit.",
+    images: [
+      "images/products/teal-two-piece-set-1.svg",
+      "images/products/teal-two-piece-set-2.svg",
+      "images/products/teal-two-piece-set-3.svg"
+    ]
+  },
+  {
+    id: "blush-three-piece-set",
+    name: "Eshwa Blush Three Piece Set",
+    price: 2799,
+    category: "3-piece",
+    sizes: ["S", "M", "L"],
+    colours: [
+      { name: "Blush Pink", hex: "#c48a8a" }
+    ],
+    stock: 2,
+    description: "Kurti, dupatta and bottom set in soft blush pink with delicate detailing, made for special occasions.",
+    images: [
+      "images/products/blush-three-piece-set-1.svg",
+      "images/products/blush-three-piece-set-2.svg",
+      "images/products/blush-three-piece-set-3.svg"
+    ]
+  },
+  {
+    id: "charcoal-straight-kurti",
+    name: "Eshwa Charcoal Straight Kurti",
+    price: 1349,
+    category: "kurties",
+    sizes: ["S", "M", "L", "XL"],
+    colours: [
+      { name: "Charcoal", hex: "#4a4038" }
+    ],
+    stock: 5,
+    description: "Minimal, versatile charcoal kurti in a straight-cut silhouette — pairs well with anything.",
+    images: [
+      "images/products/charcoal-straight-kurti-1.svg",
+      "images/products/charcoal-straight-kurti-2.svg",
+      "images/products/charcoal-straight-kurti-3.svg"
+    ]
+  }
+];

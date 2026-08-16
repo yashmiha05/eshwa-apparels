@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#6b2323"/>
+  <rect x="40" y="40" width="720" height="920" fill="none" stroke="#f5ede3" stroke-width="2" stroke-opacity="0.5"/>
+  <text x="400" y="470" font-family="Georgia, serif" font-size="34" fill="#f5ede3" text-anchor="middle">ESHWA APPARELS</text>
+  <text x="400" y="520" font-family="Georgia, serif" font-size="24" fill="#f5ede3" text-anchor="middle">Maroon Zari Kurti</text>
+  <text x="400" y="560" font-family="Arial, sans-serif" font-size="16" fill="#f5ede3" opacity="0.7" text-anchor="middle">Photo 1</text>
+</svg>
