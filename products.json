@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "id": "elephant-printed-set-46834",
+    "name": "Elephant Printed Set",
+    "price": 1299,
+    "category": "2-piece",
+    "sizes": [
+      "L"
+    ],
+    "colours": [
+      {
+        "name": "Violet",
+        "hex": "#6b2323"
+      }
+    ],
+    "stock": 1,
+    "description": "",
+    "images": [
+      "data:,"
+    ],
+    "tag": "NEW"
+  }
+]
