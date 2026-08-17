@@ -132,6 +132,7 @@
         <label>Colours Available</label>
         <div id="colour-rows"></div>
         <button class="btn btn-outline btn-sm" onclick="addColourRow()">+ Add Colour</button>
+        <p class="admin-hint">Type a common colour name (e.g. Maroon, Olive, Teal) and the swatch updates automatically. Click the swatch itself to fine-tune the exact shade.</p>
       </div>
 
       <div class="admin-group">
@@ -275,6 +276,22 @@ async function pushProducts(commitMessage) {
 }
 
 /* ---------- Colour rows ---------- */
+const COLOUR_MAP = {
+  maroon: "#6b2323", red: "#a02020", "deep red": "#8b2020", pink: "#e08ba0",
+  "blush pink": "#c48a8a", blush: "#c48a8a", peach: "#c98f7a", beige: "#c9a874",
+  cream: "#e7d9bd", brown: "#6b3a1f", "rust": "#a0522d", mustard: "#b8860b",
+  yellow: "#d4b106", gold: "#c9a227", olive: "#5c6b3c", green: "#3d6b3c",
+  "sage green": "#8ba888", mint: "#8bb59a", teal: "#2f5d5a", blue: "#2f4d6b",
+  "navy": "#1c2e4a", "sky blue": "#7fb3d5", purple: "#5c3a6b", lavender: "#b3a1c9",
+  black: "#1a1a1a", charcoal: "#4a4038", grey: "#7a7a7a", gray: "#7a7a7a",
+  white: "#f5f0e6", ivory: "#efe7d5", orange: "#c9602c", coral: "#d97b6c"
+};
+
+function guessColourHex(name) {
+  const key = name.trim().toLowerCase();
+  return COLOUR_MAP[key] || null;
+}
+
 function addColourRow(name, hex) {
   const wrap = document.getElementById("colour-rows");
   const row = document.createElement("div");
@@ -284,6 +301,12 @@ function addColourRow(name, hex) {
     <input type="color" class="colour-hex" value="${hex || '#6b2323'}">
     <button class="small-x" onclick="this.parentElement.remove()">✕</button>
   `;
+  const nameInput = row.querySelector(".colour-name");
+  const hexInput = row.querySelector(".colour-hex");
+  nameInput.addEventListener("input", () => {
+    const guessed = guessColourHex(nameInput.value);
+    if (guessed) hexInput.value = guessed;
+  });
   wrap.appendChild(row);
 }
 
