@@ -283,12 +283,123 @@ async function fetchProducts() {
     if (!res.ok) throw new Error(res.status === 404 ? "products.json not found in repo" : `GitHub error ${res.status}`);
     const data = await res.json();
     currentSha = data.sha;
+    if (!data.content) {
+      // File too large for the API to return inline — needs repair
+      setStatus("Your product data has grown too large to load normally (likely from photos saved inside it). ", "err");
+      showRepairButton();
+      return;
+    }
     currentProducts = JSON.parse(base64ToUtf8(data.content));
     renderProductList();
     clearStatus();
   } catch (e) {
-    setStatus("Could not load products: " + e.message + ". Check your username/repo/token and try again.", "err");
+    setStatus("Could not load products: " + e.message + ". Check your username/repo/token, or try repairing your data below.", "err");
+    showRepairButton();
   }
+}
+
+function showRepairButton() {
+  const el = document.getElementById("status-msg");
+  if (document.getElementById("repair-btn")) return;
+  const btn = document.createElement("button");
+  btn.id = "repair-btn";
+  btn.className = "btn btn-primary btn-sm";
+  btn.style.marginLeft = "10px";
+  btn.textContent = "Try Automatic Repair";
+  btn.onclick = repairBrokenData;
+  el.appendChild(btn);
+}
+
+async function repairBrokenData() {
+  setStatus("Repairing your data, this may take a minute...", "loading");
+  try {
+    const rawRes = await fetch(`https://raw.githubusercontent.com/${ghOwner}/${ghRepo}/main/products.json?t=${Date.now()}`);
+    if (!rawRes.ok) throw new Error("Could not fetch your data directly from GitHub");
+    const rawText = await rawRes.text();
+    let products;
+    try {
+      products = JSON.parse(rawText);
+    } catch (e) {
+      throw new Error("Your products.json is corrupted and can't be read: " + e.message);
+    }
+
+    for (let p = 0; p < products.length; p++) {
+      const prod = products[p];
+      for (let i = 0; i < prod.images.length; i++) {
+        if (prod.images[i].startsWith("data:")) {
+          setStatus(`Repairing "${prod.name}" — photo ${i + 1}...`, "loading");
+          const path = `images/products/${prod.id}-${Date.now()}-${i}.jpg`;
+          await uploadImageFile(prod.images[i], path);
+          prod.images[i] = path;
+        }
+      }
+    }
+
+    setStatus("Saving repaired data...", "loading");
+    const metaRes = await fetch(apiUrl("products.json"), {
+      headers: { Authorization: `token ${ghToken}` }
+    });
+    if (!metaRes.ok) throw new Error("Could not get current file info for products.json");
+    const meta = await metaRes.json();
+
+    const content = utf8ToBase64(JSON.stringify(products, null, 2));
+    const putRes = await fetch(apiUrl("products.json"), {
+      method: "PUT",
+      headers: { Authorization: `token ${ghToken}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: "Repair: move embedded photos to separate files",
+        content,
+        sha: meta.sha,
+        branch: "main"
+      })
+    });
+    if (!putRes.ok) {
+      const err = await putRes.json().catch(() => ({}));
+      throw new Error(err.message || `GitHub error ${putRes.status}`);
+    }
+
+    setStatus("Repair complete! Reloading your products...", "ok");
+    setTimeout(fetchProducts, 1500);
+  } catch (e) {
+    setStatus("Repair failed: " + e.message, "err");
+  }
+}
+
+async function uploadImageFile(dataUrl, path) {
+  const base64 = dataUrl.split(",")[1];
+  const res = await fetch(apiUrl(path), {
+    method: "PUT",
+    headers: {
+      Authorization: `token ${ghToken}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: `Add product photo ${path}`,
+      content: base64,
+      branch: "main"
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `GitHub error ${res.status}`);
+  }
+  return path;
+}
+
+async function uploadNewImages(id, images) {
+  const finalImages = [];
+  for (let i = 0; i < images.length; i++) {
+    const img = images[i];
+    if (img.startsWith("data:")) {
+      setStatus(`Uploading photo ${i + 1} of ${images.length}...`, "loading");
+      const path = `images/products/${id}-${Date.now()}-${i}.jpg`;
+      await uploadImageFile(img, path);
+      finalImages.push(path);
+    } else {
+      finalImages.push(img); // already an uploaded path, keep as-is
+    }
+  }
+  return finalImages;
 }
 
 async function pushProducts(commitMessage) {
@@ -628,11 +739,12 @@ async function saveProduct() {
   const editId = document.getElementById("edit-id").value;
   const id = editId || slugify(name) + "-" + Date.now().toString().slice(-5);
 
-  const productObj = { id, name, price, category, sizes, colours, stock, description, images: currentImages };
-  if (tag) productObj.tag = tag;
-
   setStatus("Saving to GitHub...", "loading");
   try {
+    const uploadedImages = await uploadNewImages(id, currentImages);
+    const productObj = { id, name, price, category, sizes, colours, stock, description, images: uploadedImages };
+    if (tag) productObj.tag = tag;
+
     if (editId) {
       const idx = currentProducts.findIndex(p => p.id === editId);
       currentProducts[idx] = productObj;
