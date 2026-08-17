@@ -317,18 +317,46 @@ async function pushProducts(commitMessage) {
 /* ---------- Colour rows ---------- */
 const COLOUR_MAP = {
   maroon: "#6b2323", red: "#a02020", "deep red": "#8b2020", pink: "#e08ba0",
-  "blush pink": "#c48a8a", blush: "#c48a8a", peach: "#c98f7a", beige: "#c9a874",
-  cream: "#e7d9bd", brown: "#6b3a1f", "rust": "#a0522d", mustard: "#b8860b",
-  yellow: "#d4b106", gold: "#c9a227", olive: "#5c6b3c", green: "#3d6b3c",
-  "sage green": "#8ba888", mint: "#8bb59a", teal: "#2f5d5a", blue: "#2f4d6b",
-  "navy": "#1c2e4a", "sky blue": "#7fb3d5", purple: "#5c3a6b", lavender: "#b3a1c9",
-  black: "#1a1a1a", charcoal: "#4a4038", grey: "#7a7a7a", gray: "#7a7a7a",
-  white: "#f5f0e6", ivory: "#efe7d5", orange: "#c9602c", coral: "#d97b6c"
+  "blush pink": "#c48a8a", blush: "#c48a8a", "dusty pink": "#c48a9a", "dusty rose": "#c17a80",
+  "baby pink": "#f4c2d7", "hot pink": "#e0559c", magenta: "#c2185b", fuchsia: "#c2185b",
+  peach: "#c98f7a", apricot: "#d99a6c", salmon: "#e08a72", coral: "#d97b6c",
+  beige: "#c9a874", cream: "#e7d9bd", "off white": "#f2ead8", "off-white": "#f2ead8",
+  ivory: "#efe7d5", nude: "#d9b99b", skin: "#e0b394", tan: "#c19a6b", camel: "#c19a6b",
+  brown: "#6b3a1f", chocolate: "#4a2f1f", "chocolate brown": "#4a2f1f", "coffee brown": "#4a3222",
+  copper: "#b06a3a", bronze: "#8c6a3f", rust: "#a0522d", mustard: "#b8860b",
+  yellow: "#d4b106", gold: "#c9a227", golden: "#c9a227",
+  olive: "#5c6b3c", green: "#3d6b3c", "sage green": "#8ba888", mint: "#8bb59a",
+  "mint green": "#8bb59a", "bottle green": "#2f4a2f", "forest green": "#2e4d2e", emerald: "#2e8b57",
+  teal: "#2f5d5a", turquoise: "#30b0a8", cyan: "#3aa9b0",
+  blue: "#2f4d6b", navy: "#1c2e4a", "royal blue": "#2447b0", "sky blue": "#7fb3d5",
+  "powder blue": "#a9c6dd", denim: "#3a5a78", indigo: "#3f3f8c", cobalt: "#2456a8",
+  purple: "#5c3a6b", lavender: "#b3a1c9", lilac: "#c6a3d9", plum: "#6b3a5a", violet: "#6a3a8c",
+  black: "#1a1a1a", "jet black": "#0d0d0d", charcoal: "#4a4038", grey: "#7a7a7a", gray: "#7a7a7a",
+  white: "#f5f0e6", orange: "#c9602c", wine: "#5c1f2e", burgundy: "#5c1f2e", khaki: "#8a7a4f"
 };
 
-function guessColourHex(name) {
-  const key = name.trim().toLowerCase();
-  return COLOUR_MAP[key] || null;
+function cssColorToHex(name) {
+  try {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 1;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#123456";
+    ctx.fillStyle = name;
+    const out = ctx.fillStyle;
+    if (out === "#123456") return null;
+    return /^#([0-9a-f]{6})$/i.test(out) ? out : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function guessColourHex(nameRaw) {
+  const key = nameRaw.trim().toLowerCase();
+  if (!key) return null;
+  if (COLOUR_MAP[key]) return COLOUR_MAP[key];
+  const noSpace = key.replace(/\s+/g, "");
+  if (COLOUR_MAP[noSpace]) return COLOUR_MAP[noSpace];
+  return cssColorToHex(key) || cssColorToHex(noSpace);
 }
 
 function addColourRow(name, hex) {
